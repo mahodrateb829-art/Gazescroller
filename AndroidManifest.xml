@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="true" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- لازم من Android 11+ (API 30) عشان getLaunchIntentForPackage("com.instagram.android")
+         يشتغل صح — بدون هاد الإعلان، النظام ممكن يخفي معلومات إنستغرام عن تطبيقك
+         حتى لو مثبّت فعليًا، ويطلع "إنستغرام مش متثبّت" غلط -->
+    <queries>
+        <package android:name="com.instagram.android" />
+    </queries>
+
+    <application
+        android:name=".GazeApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="مرّر بميل رأسك"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Material3.DayNight">
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- خدمة إمكانية الوصول: هي المسؤولة عن تنفيذ حركة السحب (swipe) الفعلية
+             داخل أي تطبيق آخر مفتوح على الشاشة، بما فيه إنستغرام -->
+        <service
+            android:name=".GazeAccessibilityService"
+            android:exported="false"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
